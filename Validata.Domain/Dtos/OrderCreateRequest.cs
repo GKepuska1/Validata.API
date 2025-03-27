@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Validata.Domain.Dtos
+﻿namespace Validata.Domain.Dtos
 {
     public class OrderCreateRequest
     {
@@ -12,7 +10,6 @@ namespace Validata.Domain.Dtos
     {
         public int ProductId { get; set; }
         public int Quantity { get; set; }
-        public decimal Price { get; set; }
     }
 
     public class UpdateOrderRequest

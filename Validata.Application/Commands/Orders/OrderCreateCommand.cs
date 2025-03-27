@@ -44,12 +44,19 @@ namespace Validata.Application.Commands.Orders
                     orderItems.Add(new OrderItem(product.Price, item.Quantity, product.Id));
                 }
 
-                var order = new Order(orderItems)
+                var order = new Order()
                 {
-                    CustomerId = request.CustomerId
+                    CustomerId = request.CustomerId,
+                    TotalPrice = orderItems.Sum(i => i.Price * i.Quantity)
                 };
-
                 await _unitOfWork.Orders.AddAsync(order);
+                await _unitOfWork.CompleteAsync();
+
+                for (int i = 0; i < orderItems.Count; i++)
+                {
+                    orderItems[i].OrderId = order.Id;
+                    await _unitOfWork.OrderItems.AddAsync(orderItems[i]);
+                }
                 await _unitOfWork.CompleteAsync();
 
                 return order;

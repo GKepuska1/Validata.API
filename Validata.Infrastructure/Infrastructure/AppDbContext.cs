@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Validata.Domain.Entities;
 
 namespace Validata.Infrastructure.Infrastructure
@@ -13,6 +14,7 @@ namespace Validata.Infrastructure.Infrastructure
         public Task<int> SaveChangesAsync();
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 
+        DatabaseFacade GetDatabaseFacade();
     }
 
     public class AppDbContext : DbContext, IAppDbContext
@@ -27,24 +29,28 @@ namespace Validata.Infrastructure.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Order>()
-                .HasMany(o => o.Items)
+                .HasMany(o => o.OrderItems)
                 .WithOne(o => o.Order)
                 .HasForeignKey(o => o.OrderId);
 
-            modelBuilder.Entity<Customer>()
-                .HasMany(o => o.Orders)
-                .WithOne(o => o.Customer)
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Customer)
+                .WithMany(c => c.Orders)
                 .HasForeignKey(o => o.CustomerId);
+
 
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Product);
-
-
         }
 
         public async Task<int> SaveChangesAsync()
         {
             return await base.SaveChangesAsync();
+        }
+
+        public DatabaseFacade GetDatabaseFacade()
+        {
+            return this.Database;
         }
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using Validata.Application;
 using Validata.Infrastructure;
 
@@ -9,7 +10,10 @@ var configuration = builder.Configuration.AddJsonFile("appsettings.json",
                 reloadOnChange: false)
                 .Build();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
 
@@ -19,6 +23,7 @@ builder.Services.AddSwaggerGen(option =>
 });
 
 var app = builder.Build();
+app.Services.MigrateTables();
 
 app.UseSwagger();
 app.UseSwaggerUI();

@@ -25,23 +25,10 @@ namespace Validata.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] OrderCreateRequest request)
         {
-            if (request == null || !ModelState.IsValid)
-            {
-                return BadRequest("Invalid order data provided.");
-            }
+            var command = new OrderCreateCommand(request.CustomerId, request.Items);
+            var createdOrder = await Mediator.Send(command);
 
-            try
-            {
-                var command = new OrderCreateCommand(request.CustomerId, request.Items);
-                var createdOrder = await Mediator.Send(command);
-
-                return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
-            }
-            catch (Exception ex)
-            {
-                // Handle different exceptions, like customer or product not found
-                return NotFound(ex.Message);
-            }
+            return CreatedAtAction(nameof(GetOrderById), new { id = createdOrder.Id }, createdOrder);
         }
 
         /// <summary>
@@ -59,7 +46,7 @@ namespace Validata.API.Controllers
 
             if (order == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
             return Ok(order);
         }
@@ -93,10 +80,10 @@ namespace Validata.API.Controllers
 
             if (!result)
             {
-                return NotFound("Order not found."); 
+                return NotFound("Order not found.");
             }
 
-            return Ok("Order deleted successfully."); 
+            return Ok("Order deleted successfully.");
         }
 
         /// <summary>
@@ -127,7 +114,7 @@ namespace Validata.API.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound(ex.Message); 
+                return NotFound(ex.Message);
             }
         }
     }

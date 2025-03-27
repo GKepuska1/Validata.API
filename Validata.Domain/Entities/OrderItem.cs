@@ -1,6 +1,6 @@
 ﻿namespace Validata.Domain.Entities
 {
-    public class OrderItem
+    public class OrderItem : BaseEntity
     {
         public OrderItem(decimal price, int quantity, int productId)
         {
@@ -9,7 +9,7 @@
             if (productId <= 0) throw new ArgumentException("productId must be greater than zero.");
 
             Quantity = quantity;
-            Price = Price;
+            Price = price;
             ProductId = productId;
         }
 

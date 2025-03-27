@@ -36,11 +36,13 @@ namespace Validata.Infrastructure.Repositories
 
         public async Task AddAsync(T entity)
         {
+            entity.InsertedAt = DateTime.Now;
             await _dbSet.AddAsync(entity);
         }
 
         public async Task UpdateAsync(T entity)
         {
+            entity.UpdatedAt = DateTime.Now;
             _dbSet.Update(entity);
             await Task.CompletedTask;
         }

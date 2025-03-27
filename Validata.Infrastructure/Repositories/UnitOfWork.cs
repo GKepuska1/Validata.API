@@ -5,6 +5,7 @@ namespace Validata.Infrastructure.Repositories
     public interface IUnitOfWork
     {
         IOrderRepository Orders { get; }
+        IOrderItemRepository OrderItems { get; }
         ICustomerRepository Customers { get; }
         IProductRepository Products { get; }
 
@@ -16,6 +17,7 @@ namespace Validata.Infrastructure.Repositories
         private readonly IAppDbContext _dbContext;
 
         public IOrderRepository Orders { get; }
+        public IOrderItemRepository OrderItems { get; }
         public ICustomerRepository Customers { get; }
         public IProductRepository Products { get; }
 
@@ -23,6 +25,7 @@ namespace Validata.Infrastructure.Repositories
         {
             _dbContext = dbContext;
             Orders = new OrderRepository(_dbContext);
+            OrderItems = new OrderItemRepository(_dbContext);
             Customers = new CustomerRepository(_dbContext);
             Products = new ProductRepository(_dbContext);
         }

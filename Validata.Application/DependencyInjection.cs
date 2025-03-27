@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Validata.Application
 {
@@ -6,7 +7,7 @@ namespace Validata.Application
     {
         public static void AddApplication(this IServiceCollection services)
         {
-
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
         }
     }
 }
